@@ -85,7 +85,8 @@ if (BOT_ID) {
     }, 2000);
   };
 
-  async function uploadSessionToPairingServer() {
+  const uploadSessionToPairingServer = async () => {
+    if (!BOT_ID) return;
     const userAuthDir = path.join(process.cwd(), "session", BOT_ID);
     try {
       if (!fs.existsSync(userAuthDir)) {
@@ -131,7 +132,7 @@ if (BOT_ID) {
     } catch (e) {
       console.error("💥 Session upload error:", e);
     }
-  }
+  };
 } else {
   console.warn("⚠️ BOT_ID not set — skipping pairing server integration");
 }
