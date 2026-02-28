@@ -6,7 +6,7 @@ builder = "NIXPACKS"
 buildCommand = "npm install && npm run build"
 
 [build.env]
-# YOUTUBE_DL_SKIP_PYTHON_CHECK is removed because we need Python
+YOUTUBE_DL_SKIP_PYTHON_CHECK = "1"
 
 [deploy]
 startCommand = "npm run start"
