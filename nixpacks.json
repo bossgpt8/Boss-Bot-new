@@ -1,6 +1,9 @@
 {
   "providers": ["node", "python"],
   "build": {
-    "aptPkgs": ["python3"]
+    "aptPkgs": ["python3", "libstdc++6"]
+  },
+  "variables": {
+    "NODE_VERSION": "22"
   }
 }
