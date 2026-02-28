@@ -13,10 +13,8 @@ export async function registerRoutes(
   app.use(cors());
 
   // Bot Status
-  app.get(api.bot.status.path, async (req, res) => {
-    const userId = (req.query.userId as string) || "default";
-    const status = await botManager.getStatus(userId);
-    res.json(status);
+  app.get(api.bot.status.path, (req, res) => {
+    res.json(botManager.getStatus());
   });
 
   // Bot Actions
