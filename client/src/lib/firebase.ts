@@ -1,4 +1,5 @@
 import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 import { 
   getAuth, 
   GoogleAuthProvider, 
@@ -13,16 +14,17 @@ import {
 import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBgPu2vu1QeH76l7CLuJXQxzpsmuOfGjpM",
-  authDomain: "boss-bot-b3858.firebaseapp.com",
-  projectId: "boss-bot-b3858",
-  storageBucket: "boss-bot-b3858.firebasestorage.app",
-  messagingSenderId: "626207302410",
-  appId: "1:626207302410:web:9599d4fafe9937d0e990f3",
-  measurementId: "G-64QBPYVFVL"
+  apiKey: "AIzaSyD-Y-1-WxtrAxDonf6H7OXzezakyaxPL8I",
+  authDomain: "boss-bot-md.firebaseapp.com",
+  projectId: "boss-bot-md",
+  storageBucket: "boss-bot-md.firebasestorage.app",
+  messagingSenderId: "382812382967",
+  appId: "1:382812382967:web:884faea91e645af14455f2",
+  measurementId: "G-J19CBQ8BPJ"
 };
 
 const app = initializeApp(firebaseConfig);
+const analytics = typeof window !== 'undefined' ? getAnalytics(app) : null;
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 const googleProvider = new GoogleAuthProvider();

@@ -1,0 +1,15 @@
+# Railway Deployment Configuration
+# This file is used by Railway to determine how to build and run the app
+
+[build]
+builder = "NIXPACKS"
+buildCommand = "npm run build"
+
+[deploy]
+startCommand = "npm run start"
+healthcheckPath = "/api/bot/status"
+restartPolicyType = "ON_FAILURE"
+maxRestartRetries = 10
+
+[envs]
+NODE_ENV = "production"
