@@ -1,5 +1,5 @@
 {
-  "providers": [],
+  "providers": ["node"],
   "build": {
     "aptPkgs": ["python3"]
   }
