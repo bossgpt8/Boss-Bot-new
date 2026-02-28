@@ -1,13 +1,20 @@
-// Firestore Security Rules
+// Firestore Security Rules for Production
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow the user to read and write their own data
-    // This is a basic rule, you might want to restrict it further based on your app's needs
+    // Secure rules: only authenticated users can read/write their own data
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Bot sessions: only the owner of the session can access it
+    match /botSessions/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Default deny for all other collections
     match /{document=**} {
-      allow read, write: if true; // WARNING: This allows anyone to read/write. 
-      // For production, use something like:
-      // allow read, write: if request.auth != null;
+      allow read, write: if false;
     }
   }
 }
