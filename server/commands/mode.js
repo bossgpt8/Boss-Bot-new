@@ -16,9 +16,9 @@ async function modeCommand(sock, chatId, senderId, mentionedJids, message, args,
 
         if (option === 'public' || option === 'pub') {
             if (userId) {
-                await storage.updateUserSettings(userId, { publicMode: 'public' });
+                await storage.updateUserSettings(userId, { publicMode: true });
             } else {
-                await storage.updateSettings({ publicMode: 'public' });
+                await storage.updateSettings({ publicMode: true });
             }
 
             await sock.sendMessage(chatId, {
@@ -27,29 +27,17 @@ async function modeCommand(sock, chatId, senderId, mentionedJids, message, args,
 
         } else if (option === 'private' || option === 'priv') {
             if (userId) {
-                await storage.updateUserSettings(userId, { publicMode: 'private' });
+                await storage.updateUserSettings(userId, { publicMode: false });
             } else {
-                await storage.updateSettings({ publicMode: 'private' });
+                await storage.updateSettings({ publicMode: false });
             }
 
             await sock.sendMessage(chatId, {
                 text: '🔒 *Bot Mode: PRIVATE*\n\nOnly owner and sudo users can use the bot.'
             }, { quoted: message });
 
-        } else if (option === 'inbox') {
-            if (userId) {
-                await storage.updateUserSettings(userId, { publicMode: 'inbox' });
-            } else {
-                await storage.updateSettings({ publicMode: 'inbox' });
-            }
-
-            await sock.sendMessage(chatId, {
-                text: '📥 *Bot Mode: INBOX*\n\nCommands now only work in DMs for non-owners.'
-            }, { quoted: message });
-
         } else {
-            const currentMode = settings.publicMode === 'public' ? '🌐 Public' : 
-                               settings.publicMode === 'private' ? '🔒 Private' : '📥 Inbox';
+            const currentMode = settings.publicMode ? '🌐 Public' : '🔒 Private';
 
             await sock.sendMessage(chatId, {
                 text: `*🤖 BOT MODE*\n
@@ -57,8 +45,7 @@ Current Mode: ${currentMode}
 
 *Usage:*
 • .mode public - Everyone can use
-• .mode private - Only owner can use
-• .mode inbox - Only work in DMs`
+• .mode private - Only owner can use`
             }, { quoted: message });
         }
 

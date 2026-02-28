@@ -30,15 +30,14 @@ async function settingsCommand(
             return;
         }
 
-        const currentMode = settings.publicMode === 'public' ? "🌐 ᴘᴜʙʟɪᴄ" : 
-                           settings.publicMode === 'private' ? "🔒 ᴘʀɪᴠᴀᴛᴇ" : "📥 ɪɴʙᴏx";
-        
         const lines = [];
         lines.push("*📊 ʙᴏᴛ sᴇᴛᴛɪɴɢs*");
         lines.push("");
         lines.push(`• ʙᴏᴛ ɴᴀᴍᴇ: ${settings.botName}`);
         lines.push(`• ᴏᴡɴᴇʀ: ${settings.ownerNumber || "ɴᴏᴛ sᴇᴛ"}`);
-        lines.push(`• ᴍᴏᴅᴇ: ${currentMode}`);
+        lines.push(
+            `• ᴍᴏᴅᴇ: ${settings.publicMode ? "🌐 ᴘᴜʙʟɪᴄ" : "🔒 ᴘʀɪᴠᴀᴛᴇ"}`,
+        );
         lines.push(`• ᴀᴜᴛᴏ ʀᴇᴀᴅ: ${settings.autoRead ? "✅ ᴏɴ" : "❌ ᴏғғ"}`);
         lines.push(
             `• ᴀᴜᴛᴏ sᴛᴀᴛᴜs ʀᴇᴀᴅ: ${settings.autoStatusRead ? "✅ ᴏɴ" : "❌ ᴏғғ"}`,

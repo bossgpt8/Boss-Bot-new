@@ -34,11 +34,6 @@ export default function Home() {
             <div className="flex items-center gap-2 mb-2">
               <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
               <span className="text-[10px] font-bold text-primary uppercase tracking-[0.3em]">System Dashboard</span>
-              {linkedNumber && (
-                <span className="text-[10px] font-bold text-green-500 uppercase tracking-[0.3em] ml-2">
-                  • Linked: +{linkedNumber}
-                </span>
-              )}
             </div>
             <h1 className="text-4xl md:text-5xl font-display font-black tracking-tighter text-white">
               BOSS COMMAND

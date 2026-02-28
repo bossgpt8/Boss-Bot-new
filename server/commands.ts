@@ -104,54 +104,13 @@ export async function handleCommand(
     ? await storage.getUserSettings(userId)
     : await storage.getSettings();
 
-  const isGroup = remoteJid.endsWith("@g.us");
-  const isOwner = isFromMe || (await checkIsOwner(sender, sock, remoteJid));
-
   const isCommand = content.startsWith(prefix);
-  const mode = settings.publicMode || "public";
-
-  // PRIVATE MODE: Only owner can execute
-  if (mode === "private" && !isOwner) {
-    if (isCommand) {
-      await sock.sendMessage(remoteJid, {
-        text: "🤖 Bot is in private mode",
-      });
-      return; // STOP command execution
-    }
-  }
-
-  // INBOX MODE: Only work in DMs, groups are ignored
-  if (mode === "inbox") {
-    if (isGroup && isCommand && !isOwner) {
-      return; // STOP command execution silently
-    }
-  }
-
   const args = isCommand ? content.slice(prefix.length).trim().split(/\s+/) : [];
   let commandName = args.shift()?.toLowerCase();
 
-  // Handle .inbox command directly as requested
-  if (isCommand && commandName === "inbox") {
-    if (!isOwner) {
-      await sock.sendMessage(remoteJid, {
-        text: "❌ Only bot owner can use this command!",
-      });
-      return;
-    }
-    await storage.updateSettings({ publicMode: "inbox" });
-    await sock.sendMessage(remoteJid, {
-      text: "📥 *Bot Mode: INBOX*\n\nCommands now only work in DMs for non-owners.",
-    });
-    return;
-  }
-
   // Log command execution early to ensure it shows up
   if (isCommand && commandName) {
-    const logMsg = `User ${senderNumber} used command: ${commandName}`;
-    await storage.addUserLog(userId || "default", "info", logMsg);
-    // Force emit to subscribers if botManager is available
-    const { botManager } = await import("./botManager");
-    botManager.emitLog(userId || "default", "info", logMsg);
+    await storage.addUserLog(userId || "default", "info", `User ${senderNumber} used command: ${commandName}`);
   }
 
   // ✅ CHECK FOR SONG FORMAT REPLY (NEW CODE)
@@ -204,9 +163,19 @@ export async function handleCommand(
     commandName = COMMAND_ALIASES[commandName];
     if (
       commandName === "mode" &&
-      ["public", "private", "pub", "priv", "inbox"].includes(original)
+      ["public", "private", "pub", "priv"].includes(original)
     )
       args.unshift(original);
+  }
+
+  if (settings.publicMode === false && !isFromMe) {
+    const isOwner = await checkIsOwner(sender, sock, remoteJid);
+    if (!isOwner) {
+      await sock.sendMessage(remoteJid, {
+        text: "⚠️ Bot is currently in *Private Mode*. Only the owner can use commands.",
+      });
+      return;
+    }
   }
 
   const mentionedJids =
@@ -218,11 +187,7 @@ export async function handleCommand(
     try {
       const startTime = Date.now();
       const cmdFunc = loadedCommands.get(commandName);
-      await storage.addUserLog(
-        userId || "default",
-        "info",
-        `Executing ${commandName} for ${senderNumber}`,
-      );
+      await storage.addUserLog(userId || "default", "info", `Executing ${commandName} for ${senderNumber}`);
       if (typeof cmdFunc === "function") {
         await cmdFunc(
           sock,

@@ -50,7 +50,7 @@ export function Terminal({ logs, isLoading, onClearLogs }: TerminalProps) {
           {isLoading ? (
             <div className="flex items-center justify-center h-full text-primary/50 gap-2">
               <Loader2 className="w-4 h-4 animate-spin" />
-              <span>SYNCHRONIZING LOGS...</span>
+              <span>INITIALIZING LOG STREAM...</span>
             </div>
           ) : (
             <div className="space-y-1">

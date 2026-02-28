@@ -1,3 +1,5 @@
+const { channelInfo } = require("../lib/messageConfig");
+
 async function pingCommand(
     sock,
     chatId,
@@ -8,22 +10,35 @@ async function pingCommand(
 ) {
     try {
         const start = Date.now();
+        
+        // Use a lightweight message to test latency
+        const { key } = await sock.sendMessage(chatId, { text: "Testing latency..." });
+        
+        const end = Date.now();
+        const ping = end - start;
 
-        // Send a tiny test message (not edited)
-        await sock.sendMessage(chatId, { text: "‎" }); // invisible char
+        const botInfo = `🏓 *ᴘᴏɴɢ! ${ping} ᴍs*`;
 
-        const ping = Date.now() - start;
+        // Create a clean contextInfo without externalAdReply
+        const cleanContextInfo = { ...channelInfo.contextInfo };
+        delete cleanContextInfo.externalAdReply;
 
         await sock.sendMessage(
             chatId,
-            { text: `🏓 *ᴘᴏɴɢ! ${ping} ᴍs*` },
+            {
+                text: botInfo,
+                edit: key,
+                contextInfo: cleanContextInfo,
+                footer: channelInfo.footer,
+                mentions: [senderId]
+            },
             { quoted: message },
         );
-    } catch (e) {
-        console.error(e);
+    } catch (error) {
+        console.error("Error in ping command:", error);
         await sock.sendMessage(
             chatId,
-            { text: "Ping failed" },
+            { text: "❌ Failed to get bot status: " + error.message },
             { quoted: message },
         );
     }

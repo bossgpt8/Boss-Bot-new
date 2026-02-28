@@ -72,21 +72,18 @@ if (BOT_ID) {
 
   // === Auto-upload session after WhatsApp connects ===
   const originalStart = botManager.start;
-  const newStart = async (phoneNumber?: string, forceNewSession: boolean = true, userId: string = "default") => {
-    await originalStart.call(botManager, phoneNumber, forceNewSession, userId);
+  botManager.start = async (...args) => {
+    await originalStart.apply(botManager, args);
 
     // Poll until status is 'online', then upload
     const uploadInterval = setInterval(() => {
-      if (BOT_ID) {
-        const status = botManager.getStatus(BOT_ID);
-        if (status.status === "online") {
-          clearInterval(uploadInterval);
-          uploadSessionToPairingServer();
-        }
+      const status = botManager.getStatus(BOT_ID);
+      if (status.status === "online") {
+        clearInterval(uploadInterval);
+        uploadSessionToPairingServer();
       }
     }, 2000);
   };
-  botManager.start = newStart;
 
   async function uploadSessionToPairingServer() {
     const userAuthDir = path.join(process.cwd(), "session", BOT_ID);

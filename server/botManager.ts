@@ -237,14 +237,6 @@ export class BotManager {
       listeners.forEach(listener => listener(logData));
     }
   }
-
-  public emitLog(userId: string, level: "info" | "warn" | "error", message: string) {
-    const logData = { level, message, timestamp: new Date().toISOString(), userId };
-    const listeners = this.logListeners.get(userId);
-    if (listeners) {
-      listeners.forEach(listener => listener(logData));
-    }
-  }
 }
 
 export const botManager = new BotManager();
