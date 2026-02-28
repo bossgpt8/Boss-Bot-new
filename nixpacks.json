@@ -1,0 +1,6 @@
+{
+  "providers": [],
+  "build": {
+    "aptPkgs": ["python3"]
+  }
+}

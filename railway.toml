@@ -4,8 +4,10 @@
 [build]
 builder = "NIXPACKS"
 buildCommand = "npm run build"
+nixpkgsArchive = "d8bc865d4924c58f00a395b111a4f091c5e63013" # nixpkgs-unstable as of 2024-03-20
+
 [build.env]
-YOUTUBE_DL_SKIP_PYTHON_CHECK = "1"
+# YOUTUBE_DL_SKIP_PYTHON_CHECK is removed because we need Python
 
 [deploy]
 startCommand = "npm run start"
